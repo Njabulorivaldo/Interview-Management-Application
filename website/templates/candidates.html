@@ -1,0 +1,108 @@
+{% extends "dashboard.html" %}
+
+{% block style%} 
+<link rel="stylesheet" href="../static/css/media_style.css" />
+<link rel="stylesheet" href="../static/css/candidates_style.css" />
+<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    
+{% endblock %}
+
+{% block content %}
+
+
+<div id="myModal" class="popup">
+    <div class="popup-content">
+        
+        <span class="close" id="closeModal">&times;</span>
+        <div class="icon"><i class="fas fa-user"></i></div>
+
+        <form id="screenDetails" >
+            <input type="text" id="name" name="name" placeholder="Fullname" required >
+            <input type="text" id="contact" name="contact" placeholder="Contact No:" required >
+            <input type="email" id="email" name="email" placeholder="Email Address" required >
+            <input type="text" id="notes" name="notes" rows="5" cols="50" placeholder="Notes" >
+            <label for="resume">Resume</label>
+            <input type="file" id="resume" name="resume">            
+            <button type="submit" value="submit" id="submit">Add</button>
+        </form>
+    </div>
+</div>
+  
+<div class="header_fixed">
+    <table>
+        <thead
+
+            <tr>
+                <td colspan="5"></td>
+                <td>{{msg}}</td>
+                <td><button id="openFormButton">+ Add Candidate</button></td>
+            </tr>
+            <tr>
+                <th>No.</th>
+                <th>Fullname</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Resume</th>
+                <th>Notes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        {% for candidate in user.candidates %}
+            <tr>
+                <td>{{ loop.index }}.</td>
+                <td>{{ candidate.name }}</td>
+                <td>{{ candidate.contact }}</td>
+                <td>{{ candidate.email_add }}</td>
+                <td>{{ candidate.resume}}</td>
+                <td>
+                    <button type="button" class="toggle-notes" data-candidate-id="{{ candidate.id }}">
+                        View Notes
+                    </button>
+
+                    <!-- Notes Pop Up Form -->
+                    <div id="overlay-{{ candidate.id }}" class="overlay"></div>
+                    <div id="candidateNotes-{{ candidate.id }}" class="candidate-notes" style="display: none;">
+                        
+                        <form class="editable-form">
+                            <!-- Add your form fields here -->
+                            <p id="notes_area-{{ candidate.id }}" contenteditable="true">{{ candidate.notes }}</p>
+                            <br>
+                            <button type="button" class="update-notes" data-candidate-id="{{ candidate.id }}">Update</button>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" onclick="deleteCandidate({{ candidate.id }})">
+                        Delete
+                    </button>
+                    <button type="button" class="edit-candidate" data-candidate-id="{{ candidate.id }}" >
+                        Edit
+                    </button>
+                    
+                    <!-- Start Candidate Edition -->
+                    <!-- Edit Pop Up Form -->
+                    <div id="editOverlay-{{ candidate.id }}" class="overlay"></div>
+                    <div id="editForm-{{ candidate.id }}" class="edit-form" style="display: none;">
+                        <!-- Add your edit form fields here -->
+                        <label for="editName">Name:</label>
+                        <input type="text" id="editName-{{ candidate.id }}" value="{{ candidate.name }}">
+                        <br>
+                        <label for="editContact">Contact:</label>
+                        <input type="text" id="editContact-{{ candidate.id }}" value="{{ candidate.contact }}">
+                        <br>
+                        <label for="editEmail">Email:</label>
+                        <input type="text" id="editEmail-{{ candidate.id }}" value="{{ candidate.email_add }}">
+                        <br>
+                        <button type="button" class="close-edit" data-candidate-id="{{ candidate.id }}">Close</button>
+                        <button type="button" class="update-edit" data-candidate-id="{{ candidate.id }}">Update</button>
+                    </div>
+                    <!-- End Candidate Edition -->
+
+                </td>
+            </tr>
+            {% endfor %}
+
+
+{% endblock %}
+
